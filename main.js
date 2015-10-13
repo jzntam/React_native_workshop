@@ -1,27 +1,27 @@
+
 'use strict';
 
 var React = require('react-native');
-var { AppRegistry, View, StyleSheet, Text} = React;
+var { AppRegistry, View, StyleSheet, Text, Image, ActivityIndicatorIOS} = React;
 
 var MyApp = React.createClass({
 
   getInitialState() {
-    return {count: 0};
+    return {person: null};
   },
 
-  incrementCount() {
-    this.setState({count: this.state.count + 1});
+  componentDidMount() {
+    fetch('https://swapi.co/api/people/1').
+      then((result) => result.json()).
+      then((person) => this.setState({person}));
   },
 
   render() {
+    let { person } = this.state;
     return (
       <View style={styles.container}>
-        <Text style={styles.welcome}>
-          My first React Native app
-        </Text>
-        <Text onPress={this.incrementCount} style={styles.counter}>
-          {this.state.count} clicks
-        </Text>
+        { person ? <Text>{person.name}</Text> :
+                   <ActivityIndicatorIOS size="large" color="blue"/> }
       </View>
     );
   },
@@ -30,27 +30,10 @@ var MyApp = React.createClass({
 var styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent:  'center',
-    paddingTop: 200,
-  },
-  welcome: {
-    borderWidth: 1,
-    borderColor: 'black',
-    backgroundColor: 'gold',
-    textAlign: 'center',
-    height: 50,
-    width: 180,
-  },
-  counter: {
-    borderWidth: 1,
-    borderColor: 'red',
-    backgroundColor: 'orange',
-    textAlign: 'center',
-    height: 50,
-    width: 180,
-  },
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+  }
 });
 
 AppRegistry.registerComponent('main', () => MyApp);
